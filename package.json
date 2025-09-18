@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "bun": "^1.2.22"
+    "bun": "^1.2.22",
+    "zod": "^4.1.9"
   },
   "name": "m1",
   "module": "index.ts",

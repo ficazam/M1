@@ -128,5 +128,3 @@ export const buildRoute = <S extends string>(
 };
 
 const path = buildRoute("/orgs/:orgId/users/:id", { orgId: "acme", id: "42" });
-
-//

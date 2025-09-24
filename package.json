@@ -1,42 +1,22 @@
 {
-  "dependencies": {
-    "bun": "^1.2.22",
-    "zod": "^4.1.9"
-  },
   "name": "m1",
-  "module": "index.ts",
-  "type": "module",
   "private": true,
+  "packageManager": "bun@1.2.22",
+  "workspaces": ["apps/*", "api/*", "lib/*", "packages/*"],
   "devDependencies": {
-    "@biomejs/biome": "^2.2.4",
-    "@changesets/cli": "^2.29.7",
-    "@types/bun": "latest",
-    "@types/node": "^24.5.0",
-    "playwright": "^1.55.0",
     "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
     "turbo": "^2.5.6",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "@types/node": "^24.5.0"
   },
-  "peerDependencies": {
-    "typescript": "^5.9.2"
+  "dependencies": {
+    "zod": "^4.1.11"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
-    "e2e": "turbo run e2e",
-    "changeset": "changeset",
-    "release": "changeset version && turbo run build && changeset publish",
-    "format": "biome format .",
-    "format_check": "biome check .",
     "clean": "turbo run clean && rm -rf node_modules .turbo",
-    "vitest": "vitest",
-    "vitest:noWatch": "vistest run"
+    "test": "turbo run test"
   }
 }

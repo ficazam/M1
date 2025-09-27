@@ -22,7 +22,7 @@ jobs:
         run: bun run test
 
       - name: API contract tests
-        working-directory: apps/api
+        working-directory: api
         run: bun x vitest run
         
 env:

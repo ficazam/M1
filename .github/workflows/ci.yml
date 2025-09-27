@@ -1,0 +1,26 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: '1.2.22' }
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Build shared package
+        run: bun run -F @app/schemas build
+
+      - name: Zod single-version check
+        run: bun run check:zod
+
+      - name: Unit tests (schemas + web)
+        run: bun run test
+
+      - name: API contract tests
+        working-directory: apps/api
+        run: bun x vitest run

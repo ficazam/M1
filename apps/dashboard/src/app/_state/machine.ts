@@ -68,12 +68,10 @@ export const table: Table = {
   },
 } satisfies Table;
 
-export function transition<
-  S extends ViewState["tag"],
-  K extends Event["type"]
->(s: StateBy<S>, e: EventBy<K>): ViewState {
-  const handlers = table[s.tag] as Table[S];
-  const handler = handlers[e.type] as Table[S][K];
-  
+export function transition<S extends ViewState, E extends Event>(
+  s: S,
+  e: E
+): ViewState {
+  const handler = table[s.tag][e.type] as (s: typeof s, e: typeof e) => ViewState;
   return handler(s, e);
 }

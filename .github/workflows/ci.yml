@@ -1,15 +1,23 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  TURBO_TELEMETRY_DISABLED: "1"
+  NEXT_TELEMETRY_DISABLED: "1"
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    env:
-      TURBO_TELEMETRY_DISABLED: "1"
     steps:
       - uses: actions/checkout@v4
+
       - uses: oven-sh/setup-bun@v2
-        with: { bun-version: '1.2.22' }
+        with:
+          bun-version: "1.2.22"
 
       - name: Install
         run: bun install --frozen-lockfile
@@ -26,17 +34,14 @@ jobs:
       - name: API contract tests
         working-directory: api
         run: bun x vitest run
-        
- jobs:
-   e2e:
+
+  e2e:
     runs-on: ubuntu-latest
-    env:
-      TURBO_TELEMETRY_DISABLED: "1"
+    needs: build-and-test
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: "1.2.22"
 
@@ -54,9 +59,9 @@ jobs:
 
       - name: Start Next server
         run: bun run --cwd apps/dashboard start &
-      
+
       - name: Wait for server
-        run: npx wait-on http://localhost:3000
+        run: npx -y wait-on@7 http://localhost:3000
 
       - name: Run Playwright tests
         run: npx playwright test

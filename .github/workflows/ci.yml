@@ -60,8 +60,8 @@ jobs:
 
       - name: Build & start API
         run: |
-          bun run --cwd api build || true
-          bun run --cwd api start:dev &
+          bun run --cwd api/dashboard build || true
+          bun run --cwd api/dashboard start:dev &
       - name: Wait for API
         run: npx -y wait-on@7 http://localhost:3001/healthz
 

@@ -6,10 +6,7 @@ const fetchJSON = async (url: string, opts?: RequestInit) => {
   const to = setTimeout(() => ac.abort(), 8000);
 
   try {
-    const res = await fetch("http://localhost:3001/dashboard", {
-      cache: "no-store",
-      signal: ac.signal,
-    });
+    const res = await fetch(url, opts);
 
     if (!res.ok) throw new Error(`API ${res.status} ${res.statusText}`);
 
@@ -22,9 +19,12 @@ const fetchJSON = async (url: string, opts?: RequestInit) => {
 export const fetchDashboard = async (): Promise<DashboardPayload> => {
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const json = await fetchJSON(`${env.API_URL}/dashboard`);
+      const json = await fetchJSON(`${env.API_URL}/dashboard`, {
+      cache: "no-store",
+      signal: ac.signal,
+    });
       return DashboardPayloadSchema.parse(json);
-    } catch (err: any) {
+    } catch (err: unknown) {
       const retry = /^(429|5\d\d)/.test(err?.message ?? "");
 
       if (!retry || attempt === 1) throw err;

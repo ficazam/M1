@@ -1,4 +1,4 @@
-import { SetStateAction, useMemo } from "react";
+import { useMemo } from "react";
 import { Event, Filter, ViewState } from "../_state/machine";
 import { dateFormatter, moneyFormatter, upperCaser } from "../lib/utils";
 import { DashboardPayload } from "@app/schemas";

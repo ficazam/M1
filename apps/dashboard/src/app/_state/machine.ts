@@ -68,9 +68,9 @@ export const table: Table = {
   },
 } satisfies Table;
 
-export const transition = <S extends ViewState, E extends Event>(
-  s: S,
-  e: E
-): ViewState => {
-  return table[s.tag][e.type](s as any, e as any) as ViewState;
-};
+export function transition<
+  S extends ViewState["tag"],
+  E extends Event["type"]
+>(s: StateBy<S>, e: EventBy<E>): ViewState {
+  return table[s.tag][e.type](s, e);
+}

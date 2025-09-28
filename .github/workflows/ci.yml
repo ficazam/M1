@@ -8,6 +8,7 @@ on:
 env:
   TURBO_TELEMETRY_DISABLED: "1"
   NEXT_TELEMETRY_DISABLED: "1"
+  API_URL: "http://localhost:3001"
 
 jobs:
   build-and-test:
@@ -56,6 +57,13 @@ jobs:
 
       - name: Build shared package
         run: bun run -F @app/schemas build
+
+      - name: Build & start API
+        run: |
+          bun run --cwd api build || true
+          bun run --cwd api start:dev &
+      - name: Wait for API
+        run: npx -y wait-on@7 http://localhost:3001/healthz
 
       - name: Build Next app
         run: bun run --cwd apps/dashboard build

@@ -14,13 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: "1.2.22"
 
-      - name: Install
+      - name: Install (main)
+        if: github.ref == 'refs/heads/main'
         run: bun install --frozen-lockfile
+      - name: Install (PR)
+        if: github.event_name == 'pull_request'
+        run: bun install
 
       - name: Build shared package
         run: bun run -F @app/schemas build
@@ -40,13 +43,16 @@ jobs:
     needs: build-and-test
     steps:
       - uses: actions/checkout@v4
-
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: "1.2.22"
 
-      - name: Install deps
+      - name: Install (main)
+        if: github.ref == 'refs/heads/main'
         run: bun install --frozen-lockfile
+      - name: Install (PR)
+        if: github.event_name == 'pull_request'
+        run: bun install
 
       - name: Build shared package
         run: bun run -F @app/schemas build

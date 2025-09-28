@@ -68,57 +68,10 @@ export const table: Table = {
   },
 } satisfies Table;
 
-export function transition(state: ViewState, event: Event): ViewState {
-  switch (state.tag) {
-    case "idle": {
-      switch (event.type) {
-        case "FILTER":
-          return event.value === "all"
-            ? state
-            : { tag: "filtering", filter: event.value as Exclude<Filter, "all"> };
-        case "OPEN_INVOICE":
-          return { tag: "viewing_invoice", filter: state.filter, invoiceId: event.id };
-        case "CLOSE":
-        case "RESET":
-          return initState;
-      }
-      break;
-    }
-
-    case "filtering": {
-      switch (event.type) {
-        case "FILTER":
-          return event.value === "all"
-            ? { tag: "idle", filter: "all" }
-            : { tag: "filtering", filter: event.value as Exclude<Filter, "all"> };
-        case "OPEN_INVOICE":
-          return { tag: "viewing_invoice", filter: state.filter, invoiceId: event.id };
-        case "CLOSE":
-          return state;
-        case "RESET":
-          return initState;
-      }
-      break;
-    }
-
-    case "viewing_invoice": {
-      switch (event.type) {
-        case "FILTER":
-          return event.value === "all"
-            ? { tag: "idle", filter: "all" }
-            : { tag: "filtering", filter: event.value as Exclude<Filter, "all"> };
-        case "OPEN_INVOICE":
-          return { ...state, invoiceId: event.id };
-        case "CLOSE":
-          return state.filter === "all"
-            ? { tag: "idle", filter: "all" }
-            : { tag: "filtering", filter: state.filter };
-        case "RESET":
-          return initState;
-      }
-      break;
-    }
-  }
-  
-  return initState;
-}
+export const transition = <S extends ViewState, E extends Event>(
+  s: S,
+  e: E
+): ViewState => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return table[s.tag][e.type](s as any, e as any) as ViewState;
+};

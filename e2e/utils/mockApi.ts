@@ -19,40 +19,40 @@ export function startMockApi(port: number, initial: Mode) {
       }
 
       const payload = {
-        user: {
-          id: "00000000-0000-0000-0000-000000000001",
-          name: "Test Manager",
-          email: "manager@example.com",
-          role: "manager",
-          createdAt: new Date().toISOString(),
-        },
-        kpis: {
-          totalRevenue: { currency: "USD", amount: 123_400 },
-          openInvoices: 2,
-          overdueInvoices: 1,
-          arDays: 30,
-        },
-        invoices: [
-          {
-            id: "inv-1",
-            number: "INV-1",
-            issuedAt: new Date().toISOString(),
-            dueAt: new Date(Date.now() + 864e5).toISOString(),
-            total: { currency: "USD", amount: 4900 },
-            status: "open",
-            customer: {
-              id: "cust-1",
-              name: "Acme",
-              email: "ap@acme.test",
-            },
-            notes: "PO #8001",
-          },
-        ],
-        filters: {
-          roles: ["admin", "manager", "customer", "guest"],
-          statuses: ["draft", "open", "paid", "overdue", "void"],
-        },
-      };
+  user: {
+    id: "11111111-1111-1111-1111-111111111111",
+    name: "Test Manager",
+    email: "manager@example.com",
+    role: "manager",
+    createdAt: new Date().toISOString(),
+  },
+  kpis: {
+    totalRevenue: { currency: "USD", amount: 123_400 },
+    openInvoices: 2,
+    overdueInvoices: 1,
+    arDays: 30,
+  },
+  invoices: [
+    {
+      id: "22222222-2222-2222-2222-222222222222",
+      number: "INV-1",
+      issuedAt: new Date().toISOString(),
+      dueAt: new Date(Date.now() + 864e5).toISOString(),
+      total: { currency: "USD", amount: 4900 },
+      status: "open", 
+      customer: {
+        id: "33333333-3333-3333-3333-333333333333",
+        name: "Acme",
+        email: "ap@acme.test",
+      },
+      notes: "PO #8001",
+    },
+  ],
+  filters: {
+    roles: ["admin", "manager", "customer", "guest"],
+    statuses: ["draft", "open", "paid", "overdue", "void"],
+  },
+};
 
       res.writeHead(200, { "content-type": "application/json" });
       res.end(JSON.stringify(payload));

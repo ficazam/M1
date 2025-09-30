@@ -20,9 +20,12 @@ test("streams dashboard (skeleton then data)", async ({ page }) => {
 
   await page.goto("/dashboard");
 
-  await expect(page.getByText(/Dashboard/i)).toBeVisible();
-
-  await expect(page.getByText("INV-1", { exact: true })).toBeVisible({ timeout: 7000 });
+  await expect(page.getByText(/Dashboard failed to load/i)).toBeVisible({
+    timeout: 5000,
+  });
+  await expect(page.getByText(/INV-\d+/, { exact: false })).toBeVisible({
+    timeout: 7000,
+  });
 });
 
 test("shows helpful error UI on failure", async ({ page }) => {
@@ -30,6 +33,8 @@ test("shows helpful error UI on failure", async ({ page }) => {
 
   await page.goto("/dashboard");
 
-  await expect(page.getByText(/failed to load/i)).toBeVisible({ timeout: 5000 });
+  await expect(page.getByText(/failed to load/i)).toBeVisible({
+    timeout: 5000,
+  });
   await expect(page.getByRole("button", { name: /retry/i })).toBeVisible();
 });

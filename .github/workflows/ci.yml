@@ -58,13 +58,6 @@ jobs:
       - name: Build shared package
         run: bun run -F @app/schemas build
 
-      - name: Build & start API
-        run: |
-          bun run --cwd api/dashboard build || true
-          bun run --cwd api/dashboard start:dev &
-      - name: Wait for API
-        run: npx -y wait-on@7 http://localhost:3001/healthz
-
       - name: Build Next app
         run: bun run --cwd apps/dashboard build
 

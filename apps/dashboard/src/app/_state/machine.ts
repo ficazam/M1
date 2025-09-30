@@ -72,5 +72,6 @@ export const transition = <S extends ViewState, E extends Event>(
   s: S,
   e: E
 ): ViewState => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return table[s.tag][e.type](s as any, e as any) as ViewState;
 };

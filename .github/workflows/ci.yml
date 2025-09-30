@@ -1,5 +1,14 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  TURBO_TELEMETRY_DISABLED: "1"
+  NEXT_TELEMETRY_DISABLED: "1"
+  API_URL: "http://localhost:3001"
 
 jobs:
   build-and-test:
@@ -7,10 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-        with: { bun-version: '1.2.22' }
+        with:
+          bun-version: "1.2.22"
 
-      - name: Install
+      - name: Install (main)
+        if: github.ref == 'refs/heads/main'
         run: bun install --frozen-lockfile
+      - name: Install (PR)
+        if: github.event_name == 'pull_request'
+        run: bun install
 
       - name: Build shared package
         run: bun run -F @app/schemas build
@@ -24,6 +38,44 @@ jobs:
       - name: API contract tests
         working-directory: api
         run: bun x vitest run
-        
-env:
-  TURBO_TELEMETRY_DISABLED: "1"
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.2.22"
+
+      - name: Install (main)
+        if: github.ref == 'refs/heads/main'
+        run: bun install --frozen-lockfile
+      - name: Install (PR)
+        if: github.event_name == 'pull_request'
+        run: bun install
+
+      - name: Build shared package
+        run: bun run -F @app/schemas build
+
+      - name: Build Next app
+        run: bun run --cwd apps/dashboard build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Start Next server
+        run: bun run --cwd apps/dashboard start &
+
+      - name: Wait for server
+        run: npx -y wait-on@7 http://localhost:3000
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report

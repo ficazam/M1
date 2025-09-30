@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { DashboardPayload, Invoice } from "@app/schemas";
+import type { DashboardPayload } from "@app/schemas";
 import {
   initState,
   transition,

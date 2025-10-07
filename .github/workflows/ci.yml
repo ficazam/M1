@@ -35,17 +35,22 @@ jobs:
         run: bun run check:zod
 
       # ✅ Run unit tests ONLY for schemas + web (skip API)
+      # Option 1: via bunx (exec turbo)
       - name: Unit tests (schemas + web only)
         run: |
-          turbo run test \
+          bun x turbo run test \
             --filter=@app/schemas \
             --filter=dashboard
+
+      # (Alternatively use your package script:)
+      # - name: Unit tests (schemas + web only)
+      #   run: bun run test -- --filter=@app/schemas --filter=dashboard
 
   e2e:
     runs-on: ubuntu-latest
     needs: build-and-test
     env:
-      # Point Next at the Playwright mock API (tests start it; no Nest/DB)
+      # Point Next at the Playwright mock API; tests start it, no Nest/DB in CI
       API_URL: http://127.0.0.1:3011
     steps:
       - uses: actions/checkout@v4
